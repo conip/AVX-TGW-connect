@@ -18,6 +18,9 @@ module "aws_prod_spoke_1" {
 data "aviatrix_vpc" "avx_spoke_2_vpc" {
   name                = module.aws_prod_spoke_1.vpc.name
   route_tables_filter = "private"
+  depends_on = [
+    module.aws_prod_spoke_1
+  ]
 }
 
 module "avx_spoke_prod_vm" {
@@ -29,4 +32,7 @@ module "avx_spoke_prod_vm" {
   subnet_id = data.aviatrix_vpc.avx_spoke_2_vpc.subnets[0].subnet_id
   ssh_key   = var.ssh_key
   public_ip = false
+  depends_on = [
+    module.aws_prod_spoke_1
+  ]
 }
