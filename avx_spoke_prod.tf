@@ -6,12 +6,12 @@ module "aws_prod_spoke_1" {
   cidr            = "10.81.0.0/16"
   account         = var.avx_ctrl_account_aws
   transit_gw      = module.aws_transit_eu_1.transit_gateway.gw_name
-  security_domain = "prod"
+  network_domain = "prod"
   tags = {
     Owner = "pkonitz"
   }
   depends_on = [
-    aviatrix_segmentation_security_domain.segment_prod
+    aviatrix_segmentation_network_domain.segment_prod
   ]
 }
 

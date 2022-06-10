@@ -6,12 +6,12 @@ module "aws_dev_spoke_1" {
   cidr            = "10.91.0.0/16"
   account         = var.avx_ctrl_account_aws
   transit_gw      = module.aws_transit_eu_1.transit_gateway.gw_name
-  security_domain = "dev"
+  network_domain = "dev"
   tags = {
     Owner = "pkonitz"
   }
   depends_on = [
-    aviatrix_segmentation_security_domain.segment_dev
+    aviatrix_segmentation_network_domain.segment_dev
   ]
 }
 

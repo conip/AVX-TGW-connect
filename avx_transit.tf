@@ -14,11 +14,11 @@ module "aws_transit_eu_1" {
   }
 }
 
-resource "aviatrix_segmentation_security_domain" "segment_prod" {
+resource "aviatrix_segmentation_network_domain" "segment_prod" {
   domain_name = "prod"
 }
 
-resource "aviatrix_segmentation_security_domain" "segment_dev" {
+resource "aviatrix_segmentation_network_domain" "segment_dev" {
   domain_name = "dev"
 }
 
@@ -28,7 +28,7 @@ resource "aviatrix_transit_external_device_conn" "dev_conn_1" {
   gw_name                  = module.aws_transit_eu_1.transit_gateway.gw_name
   connection_type          = "bgp"
   tunnel_protocol          = "GRE"
-  remote_gateway_ip        = "10.119.100.101,10.119.100.102"
+  remote_gateway_ip        = "10.119.100.1,10.119.100.2"
   bgp_local_as_num         = "65101"
   bgp_remote_as_num        = "64512"
   local_tunnel_cidr        = "169.254.101.1/30,169.254.102.1/30"
@@ -50,9 +50,9 @@ resource "aviatrix_transit_external_device_conn" "prod_conn_1" {
   enable_edge_segmentation = false
 }
 
-resource "aviatrix_segmentation_security_domain_association" "segment_association_dev_conn_1" {
+resource "aviatrix_segmentation_network_domain_association" "segment_association_dev_conn_1" {
   transit_gateway_name = module.aws_transit_eu_1.transit_gateway.gw_name
-  security_domain_name = "dev"
+  network_domain_name = aviatrix_segmentation_network_domain.segment_dev.domain_name
   attachment_name      = aviatrix_transit_external_device_conn.dev_conn_1.connection_name
   depends_on = [
     aviatrix_transit_external_device_conn.dev_conn_1,
@@ -60,9 +60,9 @@ resource "aviatrix_segmentation_security_domain_association" "segment_associatio
   ]
 }
 
-resource "aviatrix_segmentation_security_domain_association" "segment_association_prod_conn_1" {
+resource "aviatrix_segmentation_network_domain_association" "segment_association_prod_conn_1" {
   transit_gateway_name = module.aws_transit_eu_1.transit_gateway.gw_name
-  security_domain_name = "prod"
+  network_domain_name = aviatrix_segmentation_network_domain.segment_prod.domain_name
   attachment_name      = aviatrix_transit_external_device_conn.prod_conn_1.connection_name
   depends_on = [
     aviatrix_transit_external_device_conn.prod_conn_1,
@@ -76,6 +76,9 @@ resource "aviatrix_segmentation_security_domain_association" "segment_associatio
 data "aviatrix_vpc" "aws_transit_eu_1" {
   name                = module.aws_transit_eu_1.vpc.name
   route_tables_filter = "public"
+  depends_on = [
+    module.aws_transit_eu_1
+  ]
 }
 
 # output "vpc_routing_tables" {
