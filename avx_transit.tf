@@ -52,7 +52,7 @@ resource "aviatrix_transit_external_device_conn" "prod_conn_1" {
 
 resource "aviatrix_segmentation_network_domain_association" "segment_association_dev_conn_1" {
   transit_gateway_name = module.aws_transit_eu_1.transit_gateway.gw_name
-  network_domain_name = aviatrix_segmentation_network_domain.segment_dev.domain_name
+  network_domain_name  = aviatrix_segmentation_network_domain.segment_dev.domain_name
   attachment_name      = aviatrix_transit_external_device_conn.dev_conn_1.connection_name
   depends_on = [
     aviatrix_transit_external_device_conn.dev_conn_1,
@@ -62,7 +62,7 @@ resource "aviatrix_segmentation_network_domain_association" "segment_association
 
 resource "aviatrix_segmentation_network_domain_association" "segment_association_prod_conn_1" {
   transit_gateway_name = module.aws_transit_eu_1.transit_gateway.gw_name
-  network_domain_name = aviatrix_segmentation_network_domain.segment_prod.domain_name
+  network_domain_name  = aviatrix_segmentation_network_domain.segment_prod.domain_name
   attachment_name      = aviatrix_transit_external_device_conn.prod_conn_1.connection_name
   depends_on = [
     aviatrix_transit_external_device_conn.prod_conn_1,
